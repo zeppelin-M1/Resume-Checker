@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0a0e17;
+  color: #e7eaf0;
+}
+
+::selection {
+  background: #14b8a6;
+  color: #0a0e17;
+}
+
+/* Subtle scanning-grid texture used on the hero/header */
+.bg-scan-grid {
+  background-image:
+    linear-gradient(rgba(231, 234, 240, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(231, 234, 240, 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid #14b8a6;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Thin custom scrollbar for the results panel */
+.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: #2c3b56;
+  border-radius: 8px;
+}
