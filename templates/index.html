@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Screener</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+
+            <h1>
+                <i class="fa-solid fa-robot"></i>
+                AI Resume Screener
+            </h1>
+
+            <p>
+                Upload your Resume and compare it with any Job Description using AI.
+            </p>
+
+        </header>
+
+
+        <!-- Upload Card -->
+
+        <div class="card">
+
+            <h2>
+                <i class="fa-solid fa-file-arrow-up"></i>
+                Upload Resume
+            </h2>
+
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+
+                <input type="file" name="resume" required>
+
+                <br><br>
+
+                <button type="submit">
+                    <i class="fa-solid fa-upload"></i>
+                    Upload Resume
+                </button>
+
+            </form>
+
+        </div>
+
+
+
+        {% if filename %}
+
+        <div class="card">
+
+            <h2>
+                <i class="fa-solid fa-file-lines"></i>
+                Uploaded Resume
+            </h2>
+
+            <p class="filename">
+
+                {{ filename }}
+
+            </p>
+
+            <textarea rows="18" readonly>{{ extracted_text }}</textarea>
+
+        </div>
+
+        <div class="card">
+
+            <h2>
+
+                <i class="fa-solid fa-briefcase"></i>
+
+                Job Description
+
+            </h2>
+
+            <form action="/compare" method="POST">
+
+                <input
+                    type="hidden"
+                    name="resume_file"
+                    value="{{ filename }}">
+
+                <textarea
+                    name="job_description"
+                    rows="12"
+                    placeholder="Paste Job Description Here..."
+                    required>{{ job_description if job_description else "" }}</textarea>
+
+                <br><br>
+
+                <button type="submit">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Compare Resume
+
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endif %}
+
+
+
+        {% if job_description %}
+
+        <div class="card">
+
+            <h2>
+
+                <i class="fa-solid fa-align-left"></i>
+
+                Job Description Preview
+
+            </h2>
+
+            <textarea rows="12" readonly>{{ job_description }}</textarea>
+
+        </div>
+
+        {% endif %}
+
+
+
+        {% if score %}
+
+        <div class="card score-card">
+
+            <h2>
+
+                <i class="fa-solid fa-chart-simple"></i>
+
+                ATS Match Score
+
+            </h2>
+
+            <div class="score">
+
+                {{ score }}%
+
+            </div>
+
+            {% if score >= 80 %}
+
+            <p class="score-status excellent">
+
+                Excellent Match 🚀
+
+            </p>
+
+            {% elif score >= 60 %}
+
+            <p class="score-status good">
+
+                Good Match 👍
+
+            </p>
+
+            {% else %}
+
+            <p class="score-status poor">
+
+                Needs Improvement 📈
+
+            </p>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <div class="card">
+
+            <h2>
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                Missing Keywords
+
+            </h2>
+
+            {% if missing %}
+
+            <div class="badges">
+
+                {% for item in missing %}
+
+                <span class="badge">
+
+                    {{ item }}
+
+                </span>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <p>No missing keywords 🎉</p>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <div class="card">
+
+            <h2>
+
+                <i class="fa-solid fa-lightbulb"></i>
+
+                AI Suggestions
+
+            </h2>
+
+            {% if suggestions %}
+
+            <ul class="suggestion-list">
+
+                {% for item in suggestions %}
+
+                <li>
+
+                    <i class="fa-solid fa-check"></i>
+
+                    {{ item }}
+
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p>No suggestions available.</p>
+
+            {% endif %}
+
+        </div>
+
+        {% elif ai_result %}
+
+        <div class="card">
+
+            <h2>AI Response</h2>
+
+            <pre>{{ ai_result }}</pre>
+
+        </div>
+
+        {% endif %}
+
+
+        <footer>
+
+            Built with ❤️ using Flask & Gemini AI
+
+        </footer>
+
+    </div>
+
+</body>
+
+</html>
