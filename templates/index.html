@@ -1,38 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Resume Screener</title>
 </head>
 
 <body>
 
     <h1>AI Resume Screener</h1>
-
+    <!-- Resume Upload -->
     <form action="/upload" method="POST" enctype="multipart/form-data">
-
         <input type="file" name="resume" required>
-
         <br><br>
-
-        <button type="submit">
-
-            Upload Resume
-
-        </button>
-
+        <button type="submit"> Upload Resume </button>
     </form>
 
-    
+
+
     {% if filename %}
     <hr>
-    <h2>Uploaded File</h2>
-    <p>{{ filename }}</p>
+    <h2>Uploaded Resume</h2>
+    <p><strong>{{ filename }}</strong></p>
     <h2>Extracted Resume Text</h2>
-    <textarea rows="20" cols="100">{{ extracted_text }}</textarea>
-    {% endif %}
+    <textarea rows="18" cols="100" readonly>{{ extracted_text }}</textarea>
+
     
+    <hr>
+    <h2>Paste Job Description</h2>
+    <form action="/compare" method="POST">
+        <input type="hidden" name="resume_file" value="{{ filename }}">
+        <textarea
+            name="job_description"
+            rows="12"
+            cols="100"
+            placeholder="Paste Job Description Here..."
+            required>{{ job_description if job_description else "" }}</textarea>
+        <br><br>
+        <button type="submit">
+            Compare Resume
+        </button>
+    </form>
+    {% endif %}
+
+
+
+    {% if job_description %}
+    <hr>
+    <h2>Job Description</h2>
+    <textarea rows="12" cols="100" readonly>{{ job_description }}</textarea>
+    {% endif %}
 
 </body>
-
 </html>

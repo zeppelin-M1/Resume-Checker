@@ -3,18 +3,16 @@ import fitz
 from docx import Document
 import os
 
-from matplotlib import text
-
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-def extract_text(filepath):
-    text = ""
 
+def extract_text(filepath):
+
+    text = ""
     if filepath.endswith(".pdf"):
         pdf = fitz.open(filepath)
 
@@ -24,7 +22,6 @@ def extract_text(filepath):
         pdf.close()
 
     elif filepath.endswith(".docx"):
-
         doc = Document(filepath)
 
         for para in doc.paragraphs:
@@ -51,14 +48,28 @@ def upload():
 
     filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
     file.save(filepath)
+    resume_text = extract_text(filepath)
+    return render_template(
+        "index.html",
+        filename=file.filename,
+        extracted_text=resume_text
+    )
 
-    text = extract_text(filepath)
+
+@app.route("/compare", methods=["POST"])
+def compare():
+
+    filename = request.form["resume_file"]
+    job_description = request.form["job_description"]
+    filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+    resume_text = extract_text(filepath)
 
     return render_template(
         "index.html",
-        extracted_text=text,
-        filename=file.filename
-)
+        filename=filename,
+        extracted_text=resume_text,
+        job_description=job_description
+    )
 
 
 if __name__ == "__main__":
