@@ -23,6 +23,16 @@
 
     </form>
 
+    
+    {% if filename %}
+    <hr>
+    <h2>Uploaded File</h2>
+    <p>{{ filename }}</p>
+    <h2>Extracted Resume Text</h2>
+    <textarea rows="20" cols="100">{{ extracted_text }}</textarea>
+    {% endif %}
+    
+
 </body>
 
 </html>
